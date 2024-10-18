@@ -1,49 +1,55 @@
-from .utils.ant_processes import ant_process
-from .utils.ant_feeder_processes import ant_feeder_process
-from .utils.visualize_ant_simulation import visualize_ant_simulation
+from .agent_process_methods.ant_feeder_processes import ant_feeder_process
+from .agent_process_methods.ant_processes import ant_process
+from .utils.vis_2 import visualize_ant_simulation_py_game
 import multi_agent_system_framework as mas
 import asyncio
 
 async def main():
     
+    ENVIRONMENT_SIZE = (100,100)
+    ANT_COUNT = 10
+    ANT_SPEED = 0.01
+    
+    
     # Create environment
-    environment = mas.AgentEnvironment()
+    environment = mas.Environment(ENVIRONMENT_SIZE)
           
-    # Add ant nest entity to environment 
-    nest = mas.Entity(
-        entity_type='nest',
-        position=(50,50)
+    # Add ant nest item to environment 
+    nest_position = (int(ENVIRONMENT_SIZE[0]/2), int(ENVIRONMENT_SIZE[1]/2))
+    ant_nest = mas.Item(
+        item_type='ant nest',
+        position=(nest_position),
+        data={'food count': 0}
     )
-    environment.state.add_entity(nest)
-
+    environment.add_item(ant_nest)
+    
     # Add ant agents to environment
     ant_agent_bp = mas.AgentBlueprint(
-        agent_type="Ant",
-        process=ant_process,
-        sleep_timer=0.1,
-        environment=environment,
-        attributes={'leave trail':False, 'nest position': (50,50)},
-        memory={'positions': []},
-        inventory={'food':0},
-        position= (50,50),
+        agent_type = "Ant",
+        environment = environment,
+        process = ant_process,
+        process_delay = ANT_SPEED,
+        data={'leave trail': False, 'clear trail': False, 'nest position': nest_position}.copy(),
+        position = nest_position,
     )
     ants = []
-    for _ in range(10):
-        ant = mas.create_agent(ant_agent_bp, environment)
+    for n in range(ANT_COUNT):
+        ant = mas.Agent.create_agent(ant_agent_bp)
+        ant.data['num'] = n
         ants.append(ant)    
     
     # Add ant feeder agent to environment
     ant_feeder_bp = mas.AgentBlueprint(
-        agent_type='AntFeeder',
-        process=ant_feeder_process,
-        sleep_timer=15,
-        environment=environment,
-        attributes={},
+        agent_type = 'AntFeeder',
+        process = ant_feeder_process,
+        process_delay = 3,
+        environment = environment,
+        data = {},
     )
-    ant_feeder = mas.create_agent(ant_feeder_bp, environment)
+    ant_feeder = mas.Agent.create_agent(ant_feeder_bp)
     
     # Run environment
-    await asyncio.gather(environment.run(), visualize_ant_simulation(environment, ants))
+    await asyncio.gather(environment.run(), visualize_ant_simulation_py_game(environment))
 
 if __name__ == "__main__":
     asyncio.run(main())
