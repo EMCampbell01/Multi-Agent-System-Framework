@@ -54,7 +54,7 @@ Example - Creates a HelloWorldAgent:
         environment = environment,
     )
 
-    hello_world_agent = Agent.create_agent(hello_world_agent_bp_bp, environment)
+    hello_world_agent = Agent.create_agent(hello_world_agent_bp, environment)
 ```
 This example creates a simple agent instance, an agent with no state, that does not interact with its environment, and solely prints "hello world" every second.
 

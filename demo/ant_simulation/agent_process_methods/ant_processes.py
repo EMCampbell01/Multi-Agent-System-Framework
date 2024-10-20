@@ -2,11 +2,8 @@ import multi_agent_system_framework as mas
 import random
 
 
-async def ant_process(self: mas.Agent, debug = True):
-    
-    if debug:
-        print(f'ANT: {self.data.get("num")}')
-    
+async def ant_process(self: mas.Agent):
+        
     on_nest: bool = self.position == self.data['nest position']
     on_food: bool = len(self.environment.get_items_of_type_at_position(self.position, 'food')) > 0
     on_trail: bool = len(self.environment.get_items_of_type_at_position(self.position, 'trail')) > 0
@@ -34,11 +31,9 @@ async def ant_process(self: mas.Agent, debug = True):
         pick_up_food(self)
         
         if len(self.environment.get_items_of_type_at_position(self.position, 'food')) == 0:
-            print(f'ANT: {self.data.get("num")} - clear trail = true')
             self.data['clear trail'] = True        
         
         elif len(adjacent_trail_positions) == 0:
-            print(f'ANT: {self.data.get("num")} - leave trail = true')
             self.data['leave trail'] = True
       
     elif carrying_food:
@@ -53,15 +48,12 @@ async def ant_process(self: mas.Agent, debug = True):
         follow_trail_to_food(self, self.environment.get_items_of_type_at_position(self.position, 'trail')[0])
             
     elif next_to_food:
-        print(f'ANT: {self.data.get("num")} - next to food, move to {adjacent_food_positions[0]}')
         move_to_position(self, adjacent_food_positions[0])
         
     elif next_to_trail:
-        print(f'ANT: {self.data.get("num")} - next to trail, move to {adjacent_trail_positions[0]}')
         move_to_position(self, adjacent_trail_positions[0])
         
     else:
-        print(f'ANT: {self.data.get("num")} - explore')
         explore(self)
     
 def explore(self: mas.Agent):
@@ -85,12 +77,13 @@ def explore(self: mas.Agent):
     add_position_to_memory(self, self.position)
 
 def pick_up_food(self: mas.Agent):
-    print(f'ANT: {self.data.get("num")} - pick_up_food')
+
     food = self.environment.get_items_of_type_at_position(self.position, 'food')[0]
     food.inventory['food'] -= 1
+    
     if food.inventory['food'] == 0:
         self.environment.delete_item(food.id)
-        print(f'ANT: {self.data.get("num")} - deleted food')
+        
     self.inventory.add_item('food', 1)
 
 def return_to_nest(self: mas.Agent):
@@ -120,19 +113,15 @@ def return_to_nest(self: mas.Agent):
             data = {'food direction': start_position}
         )
         self.environment.add_item(trail)
-        print(f'ANT: {self.data.get("num")} - added trail {trail.position, trail.data["food direction"]}')
-        
         
     if self.data.get('clear trail') == True:
         trails = self.environment.get_items_of_type_at_position(self.position, 'trail')
         for trail in trails:
             if trail.data.get('food direction') == start_position:
-                print(f'ANT: {self.data.get("num")} - cleared trail {trail.position, trail.data["food direction"]}')
                 self.environment.delete_item(trail.id)
                 break
         
 def drop_food_in_nest(self: mas.Agent):
-    print(f'ANT: {self.data.get("num")} - drop_food_in_nest()')
     self.inventory.remove_item('food', 1)
     ant_nest = self.environment.get_items_of_type('ant nest')[0]
     ant_nest.data['food count'] += 1
@@ -148,7 +137,6 @@ def follow_trail_to_food(self: mas.Agent, trail: mas.Item):
         explore(self)
     
     else:
-        print(f'ANT: {self.data.get("num")} - follow trail to food self.position:{self.position}, trail:{trail.position, trail.data.get("food direction")}')
         self.position = new_position 
         
 def add_position_to_memory(self: mas.Agent, position):
