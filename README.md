@@ -2,7 +2,9 @@
 **Development Status: Ongoing**
 
 ## Overview
-The Multi-Agent System Frameworks provides the building blocks to create a multi-agent system. Enables the creation of multiple agents which interact with each other and a shared environment. Agents act independantly, and run asyncronously. Can be used as a foundadtion for a number of MAS projects.
+The Multi-Agent System Framework provides the building blocks to create a multi-agent system. Enables the creation of multiple agents that interact with each other and a shared environment. Agents act independently, and run asynchronously. Can be used as a foundation for a number of MAS projects.
+
+[Watch the demo on YouTube](https://www.youtube.com/watch?v=mkvSidTgCdE)
 
 ## Core Components
 The core components of this framework are:
@@ -10,13 +12,13 @@ The core components of this framework are:
 - Agents
 - Items
 
-(Agents and Items are collectivley reffered to as *'entities'*)
+(Agents and Items are collectively reffered to as *'entities'*)
 
 # Environment
 
 **Environment**
 
-The environment is a object which represents an environment, and data that agents exist within and interact with.
+The environment is an object which represents an environment, and data that agents exist within and interact with.
 
 # Agents
 
@@ -24,20 +26,20 @@ The environment is a object which represents an environment, and data that agent
 
 The Agent class is an abstract class that contains the basic outline of any Agent instance. The class contains the basic attributes for all child agents:
 
-- id: A unique id generated on its Instanciation.
+- id: A unique id generated on its Instantiation.
 - running: A boolean representing if the agent is currently running its process loop.
 - environment: A reference to the environment instance the agent exists within.
-- process_delay: The time in seconds between each itteration of the main process loop. A lower value creates a faster acting agent
+- process_delay: The time in seconds between each iteration of the main process loop. A lower value creates a faster-acting agent.
 
-Agent instances are not intended to be created directly via this abstract class, instead the *create_agent* class method should be used with an AgentBlueprint
+Agent instances are not intended to be created directly via this abstract class, instead, the *create_agent* class method should be used with an AgentBlueprint
 
 Agents can only exist in the context of an environment, and require a reference to the environment object on their creation to be stored.
 
-The agent is run by calling *run*. This excecutes a loop infinitely until *stop_running* is called. This loop calls the process function every n seconds, where n is *process_delay*. In the Agent class, the *process* function is empty, and serves only as a placeholder, it will be overriden in its child classes to provide behaviour for the agent.  
+The agent is run by calling *run*. This executes a loop infinitely until *stop_running* is called. This loop calls the process function every n seconds, where n is *process_delay*. In the Agent class, the *process* function is empty and serves only as a placeholder, it will be overridden in its child classes to provide behavior for the agent.  
 
 **Agent Creation**
 
-To create an Agent instance, first a AgentBlueprint must be defined. Agent blueprints serve as representation of a Agent child class that can be created via the *create_agent* class method. A blueprint only requires the basic attributes of the Agent class:
+To create an Agent instance, first, a AgentBlueprint must be defined. Agent blueprints serve as a representation of an Agent child class that can be created via the *create_agent* class method. A blueprint only requires the basic attributes of the Agent class:
 
 - agent_type: used to name the child class.
 - process: the callable function to overwrite the agent base class *process* method.
@@ -75,7 +77,7 @@ Agents have additional attributes which are empty by default. Additional attribu
 **Item**
 
 Items represent basic entities that exist within an environment. 
-They may store state, but do not have their own behaviour. They are acted upon by agents
+They may store state but do not have their own behaviour. They are acted upon by agents
 
 ## Demos
 
